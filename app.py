@@ -16,5 +16,5 @@ def user():
 def utente(utente):
     return render_template('profile.html', utente=utente)
 
-dddd
+
 app.run(debug=True)
