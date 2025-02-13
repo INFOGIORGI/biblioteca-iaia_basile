@@ -1,3 +1,4 @@
+
 -- Droppo le tabelle nell’ordine corretto (relazioni inverse)
 DROP TABLE IF EXISTS Prestiti;
 DROP TABLE IF EXISTS Catalogo;
@@ -54,6 +55,15 @@ CREATE TABLE Libro_Autore (
     FOREIGN KEY (id_autore) REFERENCES Autore(id) ON DELETE CASCADE
 );
 
+-- Tabella per memorizzare in maniera univoca le locazioni
+CREATE TABLE Locazione (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    piano VARCHAR(50) NOT NULL,
+    scaffale VARCHAR(50) NOT NULL,
+    posizione VARCHAR(50) NOT NULL,
+    UNIQUE (piano, scaffale, posizione)
+);
+
 -- Modifichiamo la tabella Catalogo per fare riferimento alla tabella Locazione
 CREATE TABLE Catalogo (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -62,15 +72,6 @@ CREATE TABLE Catalogo (
     isPrestato BOOLEAN DEFAULT 0,
     FOREIGN KEY (isbn) REFERENCES Libro(isbn) ON DELETE CASCADE,
     FOREIGN KEY (id_locazione) REFERENCES Locazione(id) ON DELETE SET NULL
-);
-
--- Tabella per memorizzare in maniera univoca le locazioni
-CREATE TABLE Locazione (
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    piano VARCHAR(50) NOT NULL,
-    scaffale VARCHAR(50) NOT NULL,
-    posizione VARCHAR(50) NOT NULL,
-    UNIQUE (piano, scaffale, posizione)
 );
 
 -- INSERTS per la tabella Autore (100 record)

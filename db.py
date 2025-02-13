@@ -11,6 +11,8 @@ app.config['MYSQL_PASSWORD'] = 'ospite'
 app.config['MYSQL_DB'] = 'w3schools'
 mysql = MySQL(app)
 
+
+app.route("/")
 def insertLibrio_Catalogo(titolo,prezzo,isbn,piano,scaffale,posizione):
     cursor=mysql.connection.cursor()
     queryLibro="INSERT INTO Libro VALUES(%s,%s,%s)"
@@ -20,7 +22,8 @@ def insertLibrio_Catalogo(titolo,prezzo,isbn,piano,scaffale,posizione):
     querySelectLocazione="SELECT id FROM Locazione where piano=%s AND scaffale=%s AND posizione=%s"
     cursor.execute(querySelectLocazione,())
     locazione=cursor.fatchall
-    queryCatalogo="INSERT INTO Catalogo VALUES(%s,%s)"
+    pr   queryCatalogo="INSERT INTO Catalogo VALUES(%s,%s)"
     cursor.execute(queryCatalogo,(isbn,locazione))
+
 
 
