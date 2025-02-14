@@ -17,7 +17,7 @@ mysql = MySQL(app)
 
 @app.route("/")
 def aggiungi_libro():    
-    print(db.ordinamento(mysql,1))
+    db.logIn(mysql,"mario.rossi@example.com","password1")
     return render_template("index.html")
 
 
