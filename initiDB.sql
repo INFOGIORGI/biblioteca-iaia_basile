@@ -21,7 +21,8 @@ CREATE TABLE Autore (
 CREATE TABLE Libro (
     isbn VARCHAR(13) PRIMARY KEY,
     titolo VARCHAR(255) NOT NULL,
-    prezzo DECIMAL(10,2)
+    prezzo DECIMAL(10,2),
+    genere VARCHAR(13) 
 );
 
 -- Tabella degli utenti (correzione della sintassi e controllo formato email)
@@ -74,71 +75,89 @@ CREATE TABLE Catalogo (
     FOREIGN KEY (id_locazione) REFERENCES Locazione(id) ON DELETE SET NULL
 );
 
--- INSERTS per la tabella Autore (100 record)
-INSERT INTO Autore (nome, cognome, dataNascita, dataMorte) VALUES 
-('Mario', 'Rossi', '1950-05-15', NULL),
-('Luigi', 'Bianchi', '1962-03-10', NULL),
-('Giovanni', 'Verdi', '1970-08-30', NULL),
-('Francesco', 'Gialli', '1980-01-10', NULL),
-('Alessandro', 'Neri', '1990-02-20', NULL),
-('Andrea', 'Blu', '1975-07-07', NULL),
-('Simone', 'Marroni', '1985-11-11', NULL),
-('Marco', 'Rossi', '1965-12-12', NULL),
-('Antonio', 'Ricci', '1955-04-04', NULL),
-('Paolo', 'Ferri', '1978-09-09', NULL),
-('Francesca', 'Bianchi', '1982-03-03', NULL),
-('Sara', 'Verdi', '1992-05-05', NULL),
-('Laura', 'Gialli', '1988-07-07', NULL),
-('Elena', 'Neri', '1973-10-10', NULL),
-('Chiara', 'Blu', '1995-12-12', NULL),
-('Martina', 'Marroni', '1968-06-06', NULL),
-('Giulia', 'Rossi', '1980-08-08', NULL),
-('Stefano', 'Ricci', '1970-01-01', NULL),
-('Roberto', 'Ferri', '1966-04-04', NULL),
-('Vincenzo', 'Bianchi', '1958-11-11', NULL),
-('Lucia', 'De Angelis', '1974-02-15', NULL),
-('Mauro', 'Conti', '1983-06-22', NULL),
-('Emanuele', 'Serra', '1969-09-11', NULL),
-('Fabio', 'Longo', '1988-05-30', NULL),
-('Gianni', 'Mancini', '1957-03-12', NULL),
-('Carlo', 'Romano', '1961-08-14', NULL),
-('Giorgia', 'Ferrari', '1977-07-19', NULL),
-('Alberto', 'Costa', '1991-10-28', NULL),
-('Rosa', 'Lombardi', '1986-12-17', NULL),
-('Davide', 'Greco', '1993-04-09', NULL),
-('Elisa', 'Moretti', '1952-01-25', NULL),
-('Federico', 'Marini', '1964-11-08', NULL),
-('Domenico', 'Gatti', '1982-02-27', NULL),
-('Matteo', 'Vitale', '1996-06-06', NULL),
-('Daniele', 'Ricci', '1975-09-30', NULL),
-('Claudio', 'De Luca', '1959-07-14', NULL),
-('Enrico', 'Fabbri', '1989-03-20', NULL),
-('Gabriele', 'Pellegrini', '1981-12-12', NULL),
-('Serena', 'Riva', '1967-05-08', NULL);
+INSERT INTO Autore (nome, cognome, dataNascita, dataMorte) VALUES
+('Giuseppe', 'Verdi', '1813-10-10', '1901-01-27'),
+('Antonio', 'Vivaldi', '1678-03-04', '1741-07-28'),
+('Alessandro', 'Manzoni', '1785-03-07', '1873-05-22'),
+('Umberto', 'Eco', '1932-01-05', '2016-02-19'),
+('Dante', 'Alighieri', '1265-01-01', '1321-09-14'),
+('Italo', 'Calvino', '1923-10-15', '1985-09-19'),
+('Luigi', 'Pirandello', '1867-06-28', '1936-12-09'),
+('Primo', 'Levi', '1919-07-31', '1987-04-11'),
+('Elena', 'Ferrante', '1943-01-01', NULL),
+('Carlo', 'Collodi', '1826-03-24', '1890-09-26');
 
--- INSERTS per la tabella Libro (150 record)
-INSERT INTO Libro (isbn, titolo, prezzo) VALUES 
-('9780000000001', 'Libro 1', 9.99),
-('9780000000002', 'Libro 2', 12.50),
-('9780000000003', 'Libro 3', 15.00),
-('9780000000004', 'Libro 4', 8.75),
-('9780000000005', 'Libro 5', 11.20),
-('9780000000006', 'Libro 6', 7.30),
-('9780000000007', 'Libro 7', 16.45),
-('9780000000008', 'Libro 8', 13.99),
-('9780000000009', 'Libro 9', 10.50),
-('9780000000010', 'Libro 10', 9.00);
+INSERT INTO Libro (isbn, titolo, prezzo) VALUES
+('9781234567897', 'La Divina Commedia', 19.99),
+('9781234567898', 'I Promessi Sposi', 14.50),
+('9781234567899', 'Il Gattopardo', 18.00),
+('9781234567800', 'Il Nome della Rosa', 16.75),
+('9781234567801', 'Il Barone Rampante', 12.80),
+('9781234567802', 'Cent''anni di solitudine', 20.00),
+('9781234567803', 'La coscienza di Zeno', 13.20),
+('9781234567804', 'Se questo è un uomo', 15.60),
+('9781234567805', 'Il fu Mattia Pascal', 17.50),
+('9781234567806', 'La luna e i falò', 11.99);
 
--- INSERTS per la tabella Utenti (100 record)
-INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password) VALUES 
-('TC0001', 'Luca', 'Bianchi', '1990-03-15', 'luca@example.com', 'password123'),
-('TC0002', 'Marco', 'Verdi', '1985-07-20', 'marco@example.com', 'pass456'),
-('TC0003', 'Anna', 'Rossi', '1992-05-25', 'anna@example.com', 'secure789'),
-('TC0004', 'Giulia', 'Neri', '1980-12-01', 'giulia@example.com', 'mypassword'),
-('TC0005', 'Stefano', 'Marroni', '1995-11-11', 'stefano@example.com', 'password1');
+INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password) VALUES
+('T001', 'Mario', 'Rossi', '1980-05-12', 'mario.rossi@example.com', 'password1'),
+('T002', 'Luigi', 'Verdi', '1975-09-23', 'luigi.verdi@example.com', 'password2'),
+('T003', 'Anna', 'Bianchi', '1990-07-15', 'anna.bianchi@example.com', 'password3'),
+('T004', 'Sara', 'Neri', '1985-03-08', 'sara.neri@example.com', 'password4'),
+('T005', 'Paolo', 'Verdi', '1970-12-01', 'paolo.verdi@example.com', 'password5'),
+('T006', 'Laura', 'Russo', '1995-11-22', 'laura.russo@example.com', 'password6'),
+('T007', 'Giorgio', 'Ferri', '1982-04-30', 'giorgio.ferri@example.com', 'password7'),
+('T008', 'Elena', 'Esposito', '1992-06-18', 'elena.esposito@example.com', 'password8'),
+('T009', 'Francesco', 'Marino', '1988-08-09', 'francesco.marino@example.com', 'password9'),
+('T010', 'Martina', 'Colombo', '1998-02-14', 'martina.colombo@example.com', 'password10');
 
--- INSERTS per la tabella Prestiti (50 record, esempio)
-INSERT INTO Prestiti (id_libro, id_utente, dataInizio, dataFine) VALUES 
-('9780000000001', 'TC0001', '2024-01-10', '2024-01-20'),
-('9780000000002', 'TC0002', '2024-01-12', '2024-01-22'),
-('9780000000003', 'TC0003', '2024-01-15', '2024-01-25');
+
+INSERT INTO Locazione (piano, scaffale, posizione) VALUES
+('1', 'A', '1'),
+('1', 'A', '2'),
+('1', 'B', '1'),
+('1', 'B', '2'),
+('2', 'A', '1'),
+('2', 'A', '2'),
+('2', 'B', '1'),
+('2', 'B', '2'),
+('3', 'A', '1'),
+('3', 'A', '2');
+
+
+INSERT INTO Catalogo (isbn, id_locazione, isPrestato) VALUES
+('9781234567897', 1, 0),
+('9781234567898', 2, 1),
+('9781234567899', 3, 0),
+('9781234567800', 4, 0),
+('9781234567801', 5, 1),
+('9781234567802', 6, 0),
+('9781234567803', 7, 0),
+('9781234567804', 8, 0),
+('9781234567805', 9, 1),
+('9781234567806', 10, 0);
+
+INSERT INTO Libro_Autore (id_libro, id_autore) VALUES
+('9781234567897', 1),
+('9781234567898', 2),
+('9781234567899', 3),
+('9781234567800', 4),
+('9781234567801', 5),
+('9781234567802', 6),
+('9781234567803', 7),
+('9781234567804', 8),
+('9781234567805', 9),
+('9781234567806', 10);
+
+
+INSERT INTO Prestiti (id_libro, id_utente, dataInizio, dataFine) VALUES
+('9781234567897', 'T001', '2025-01-10', '2025-01-20'),
+('9781234567898', 'T002', '2025-02-01', '2025-02-15'),
+('9781234567899', 'T003', '2025-03-05', '2025-03-15'),
+('9781234567800', 'T004', '2025-04-10', NULL),
+('9781234567801', 'T005', '2025-05-20', '2025-06-01'),
+('9781234567802', 'T006', '2025-06-15', '2025-06-25'),
+('9781234567803', 'T007', '2025-07-10', '2025-07-20'),
+('9781234567804', 'T008', '2025-08-05', '2025-08-15'),
+('9781234567805', 'T009', '2025-09-01', '2025-09-10'),
+('9781234567806', 'T010', '2025-10-15', '2025-10-25');
