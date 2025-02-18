@@ -9,12 +9,40 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 # Funzione per inserire un libro nel catalogo
 # Inserisce il libro nella tabella Libro, la sua locazione nella tabella Locazione e collega il tutto nella tabella Catalogo
-def insertLibrio_Catalogo(mysql,titolo,prezzo,isbn,piano,scaffale,posizione):
+def insertLibrio_Catalogo(mysql,titolo,isbn,genere,piano,scaffale,posizione):
     cursor = mysql.connection.cursor()
    
+    querySelect="SELECT * FROM Libro Where isbn=%s"
+    cursor.execute(querySelect,(isbn,))
+    if cursor.fetchall():
+        querySelect="SELECT id FROM Locazione Where piano=%s AND scaffale=%s AND posizione=%s"
+        cursor.execute(querySelect,(piano,scaffale,posizione))
+        id_locazione=cursor.fetchall()
+        print(id_locazione)
+        if id_locazione:  
+            print("id_locazione")  
+            querySelect="SELECT * FROM Catalogo where id_locazione=%s"
+            cursor.execute(querySelect,(id_locazione,))
+
+            if(cursor.fetchall()):
+                print("Libro gia inserito")
+                return False
+            else:
+                # Inserisci la locazione nella tabella Locazione, aggiornando l'id se già esistente
+                queryLocazione = "INSERT INTO Locazione (piano, scaffale, posizione) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id)"
+                cursor.execute(queryLocazione, (piano, scaffale, posizione))
+                
+                # Recupera l'id della locazione appena inserita  
+                id_locazione = cursor.lastrowid
+
+                # Inserisci i dati nel Catalogo collegando il libro alla locazione
+                queryCatalogo = "INSERT INTO Catalogo (isbn, id_locazione) VALUES (%s, %s)"
+                cursor.execute(queryCatalogo, (isbn, id_locazione))
+                print("Libro esistente inserito nel catalogo")
+                return True
     # Inserisci il libro nella tabella Libro
-    queryLibro = "INSERT INTO Libro (isbn, titolo, prezzo) VALUES (%s, %s, %s)"
-    cursor.execute(queryLibro, (isbn, titolo, prezzo))
+    queryLibro = "INSERT INTO Libro (isbn, titolo,genere) VALUES (%s, %s,%s)"
+    cursor.execute(queryLibro, (isbn, titolo,genere))
     
     # Inserisci la locazione nella tabella Locazione, aggiornando l'id se già esistente
     queryLocazione = "INSERT INTO Locazione (piano, scaffale, posizione) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id)"
@@ -30,7 +58,7 @@ def insertLibrio_Catalogo(mysql,titolo,prezzo,isbn,piano,scaffale,posizione):
     mysql.connection.commit()
     print("Libro inserito con ISBN:", isbn)
     print("Locazione inserita con ID:", id_locazione)
-    
+    return True
 
 # Funzione per ricercare un libro nel catalogo in base a una parola chiave
 # La posizione indica dove deve essere trovata la parola nel titolo (0: inizio, 1: ovunque, 2: fine)
@@ -56,12 +84,12 @@ def ordinamento(mysql,dato):
     cursor=mysql.connection.cursor()
     query=""
     if dato == 0:
-        query="""SELECT l.isbn, l.titolo, l.prezzo, c.isPrestato
+        query="""SELECT l.isbn, l.titolo, c.isPrestato
                 FROM Catalogo AS c
                 JOIN Libro AS l ON c.isbn = l.isbn
                 ORDER BY l.titolo;"""
     else:
-        query="""SELECT l.isbn, l.titolo, l.prezzo, a.nome AS autore, a.cognome
+        query="""SELECT l.isbn, l.titolo, a.nome AS autore, a.cognome
                 FROM Catalogo AS c
                 JOIN Libro AS l ON c.isbn = l.isbn
                 JOIN Libro_Autore AS la ON l.isbn = la.id_libro

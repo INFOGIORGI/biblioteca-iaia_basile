@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Admin - Aggiungi Libri{% endblock %}
+
+{% block content %}
+<h2>Area Admin: Aggiungi un nuovo libro</h2>
+<form method="post" action="\admin">
+  <div class="mb-3">
+    <label for="titolo" class="form-label">Titolo</label>
+    <input type="text" class="form-control" id="titolo" name="titolo" required>
+  </div>
+  <div class="mb-3">
+    <label for="isbn" class="form-label">ISBN</label>
+    <input type="text" class="form-control" id="isbn" name="isbn" required>
+  </div>
+  <div class="mb-3">
+    <label for="posizione" class="form-label">Genere</label>
+    <input type="text" class="form-control" id="genere" name="genere" required>
+  </div>
+  <div class="mb-3">
+    <label for="piano" class="form-label">Piano</label>
+    <input type="text" class="form-control" id="piano" name="piano" required>
+  </div>
+  <div class="mb-3">
+    <label for="scaffale" class="form-label">Scaffale</label>
+    <input type="text" class="form-control" id="scaffale" name="scaffale" required>
+  </div>
+  <div class="mb-3">
+    <label for="posizione" class="form-label">Posizione</label>
+    <input type="text" class="form-control" id="posizione" name="posizione" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Aggiungi Libro</button>
+</form>
+
+{% if message == 1 %}
+<script>
+  alert("libro inserito");
+</script>
+{% endif %}
+
+
+{% if message == 0 %}
+<script>
+  alert("Inserimento fallito");
+</script>
+{% endif %}
+
+
+{% endblock %}

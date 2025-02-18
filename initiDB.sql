@@ -20,7 +20,6 @@ CREATE TABLE Autore (
 CREATE TABLE Libro (
     isbn VARCHAR(13) PRIMARY KEY,
     titolo VARCHAR(255) NOT NULL,
-    prezzo DECIMAL(10,2),
     genere VARCHAR(30),
   	riassunto text(255)
 );
@@ -87,17 +86,17 @@ INSERT INTO Autore (nome, cognome, dataNascita, dataMorte) VALUES
 ('Elena', 'Ferrante', '1943-01-01', NULL),
 ('Carlo', 'Collodi', '1826-03-24', '1890-09-26');
 
-INSERT INTO Libro (isbn, titolo, prezzo, genere, riassunto) VALUES
-    ('9781234567897', 'La Divina Commedia', 19.99, 'Poema epico', 'Un viaggio immaginario attraverso Inferno, Purgatorio e Paradiso, scritto da Dante Alighieri.'),
-    ('9781234567898', 'I Promessi Sposi', 14.50, 'Romanzo storico', 'La storia travagliata degli amori di Renzo e Lucia sullo sfondo della Lombardia del XVII secolo.'),
-    ('9781234567899', 'Il Gattopardo', 18.00, 'Romanzo storico', 'Un ritratto della nobiltà siciliana durante il Risorgimento, centrato sulla figura del Principe di Salina.'),
-    ('9781234567800', 'Il Nome della Rosa', 16.75, 'Romanzo storico/mistero', 'Un giallo ambientato in un monastero medievale, con protagonisti il monaco Guglielmo e il novizio Adso.'),
-    ('9781234567801', 'Il Barone Rampante', 12.80, 'Romanzo di formazione', 'La storia di Cosimo, un giovane che decide di vivere sugli alberi per sfuggire alle convenzioni sociali.'),
-    ('9781234567802', "Cent'anni di solitudine", 20.00, 'Romanzo', 'Una saga familiare che narra la storia dei Buendía in un villaggio immaginario in Colombia.'),
-    ('9781234567803', 'La coscienza di Zeno', 13.20, 'Romanzo', 'Il racconto in prima persona di Zeno Cosini, un uomo alle prese con le sue nevrosi e introspezioni.'),
-    ('9781234567804', 'Se questo è un uomo', 15.60, 'Memorie', 'La testimonianza di Primo Levi sulla sua prigionia nel campo di concentramento di Auschwitz.'),
-    ('9781234567805', 'Il fu Mattia Pascal', 17.50, 'Romanzo', 'La vicenda di un uomo che, creduto morto, decide di cambiare identità e iniziare una nuova vita.'),
-    ('9781234567806', 'La luna e i falò', 11.99, 'Romanzo', 'Il ritorno di un uomo emigrato in America al suo paese natale in Piemonte, alla ricerca delle sue radici.')
+INSERT INTO Libro (isbn, titolo, genere, riassunto) VALUES
+    ('9781234567897', 'La Divina Commedia', 'Poema epico', 'Un viaggio immaginario attraverso Inferno, Purgatorio e Paradiso, scritto da Dante Alighieri.'),
+    ('9781234567898', 'I Promessi Sposi', 'Romanzo storico', 'La storia travagliata degli amori di Renzo e Lucia sullo sfondo della Lombardia del XVII secolo.'),
+    ('9781234567899', 'Il Gattopardo', 'Romanzo storico', 'Un ritratto della nobiltà siciliana durante il Risorgimento, centrato sulla figura del Principe di Salina.'),
+    ('9781234567800', 'Il Nome della Rosa', 'Romanzo storico/mistero', 'Un giallo ambientato in un monastero medievale, con protagonisti il monaco Guglielmo e il novizio Adso.'),
+    ('9781234567801', 'Il Barone Rampante', 'Romanzo di formazione', 'La storia di Cosimo, un giovane che decide di vivere sugli alberi per sfuggire alle convenzioni sociali.'),
+    ('9781234567802', "Cent'anni di solitudine", 'Romanzo', 'Una saga familiare che narra la storia dei Buendía in un villaggio immaginario in Colombia.'),
+    ('9781234567803', 'La coscienza di Zeno', 'Romanzo', 'Il racconto in prima persona di Zeno Cosini, un uomo alle prese con le sue nevrosi e introspezioni.'),
+    ('9781234567804', 'Se questo è un uomo', 'Memorie', 'La testimonianza di Primo Levi sulla sua prigionia nel campo di concentramento di Auschwitz.'),
+    ('9781234567805', 'Il fu Mattia Pascal', 'Romanzo', 'La vicenda di un uomo che, creduto morto, decide di cambiare identità e iniziare una nuova vita.'),
+    ('9781234567806', 'La luna e i falò', 'Romanzo', 'Il ritorno di un uomo emigrato in America al suo paese natale in Piemonte, alla ricerca delle sue radici.')
 ;
 INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password) VALUES
 ('T001', 'Mario', 'Rossi', '1980-05-12', 'mario.rossi@example.com', 'password1'),

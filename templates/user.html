@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Area Utente - Biblioteca{% endblock %}
+
+{% block content %}
+<h2>Area Utente</h2>
+
+<!-- Sezione ricerca per parola chiave -->
+<div class="mb-4">
+  <h4>Cerca per Parola Chiave</h4>
+  <form method="post" action="/user">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Inserisci parola chiave" name="keyword">
+      <button class="btn btn-primary" type="submit">Cerca</button>
+    </div>
+  </form>
+</div>
+
+<!-- Sezione ordinamento -->
+<div class="mb-4">
+  <h4>Ordinamento dei Libri</h4>
+  <div class="btn-group" role="group" aria-label="Ordinamento">
+    <button type="button" class="btn btn-secondary">Per Autore</button>
+    <button type="button" class="btn btn-secondary">Per Titolo</button>
+  </div>
+</div>
+
+<!-- Sezione filtro per genere -->
+<div class="mb-4">
+  <h4>Filtra Libri per Genere</h4>
+  <select class="form-select" aria-label="Filtra per genere">
+    <option selected>Seleziona genere</option>
+    <option value="1">Fantasy</option>
+    <option value="2">Giallo</option>
+    <option value="3">Romanzo</option>
+    <option value="4">Storia</option>
+    <option value="5">Altro</option>
+  </select>
+</div>
+
+<!-- Lista libri con riassunto -->
+<div class="mb-4">
+  <h4>Lista Libri</h4>
+  
+{{for libro in libri}}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">{{libro[1]}}</h5>
+      <p class="card-text">Autore: Mario Rossi</p>
+      <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#riassunto1" 
+              aria-expanded="false" aria-controls="riassunto1">
+        Visualizza Riassunto
+      </button>
+      <div class="collapse mt-2" id="riassunto1">
+        <div class="card card-body">
+          {{[libro[3]]}}
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endfor%}
+
+</div>
+{% endblock %}

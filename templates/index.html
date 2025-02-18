@@ -1,10 +1,27 @@
-{% extends 'base.html' %}
-{% block titolo %}
-Home
-{% endblock %}
+{% extends "base.html" %}
+{% block title %}Home - Biblioteca{% endblock %}
 
-{% block intestazione %}Home page{% endblock %}
-{% block corpo %}
-{{ message }}
-<h2><a href="{{url_for('user')}}">Utenti</a></h2>
+{% block content %}
+<div class="jumbotron text-center">
+  <h1 class="display-4">Benvenuti nella Biblioteca!</h1>
+  <p class="lead">Scopri una vasta collezione di libri e tanto altro.</p>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-4">
+    <img src="https://via.placeholder.com/350x200?text=Libro+1" alt="Libro 1" class="img-fluid rounded">
+    <h3 class="mt-2">Titolo Libro 1</h3>
+    <p>Breve descrizione del libro 1.</p>
+  </div>
+  <div class="col-md-4">
+    <img src="https://via.placeholder.com/350x200?text=Libro+2" alt="Libro 2" class="img-fluid rounded">
+    <h3 class="mt-2">Titolo Libro 2</h3>
+    <p>Breve descrizione del libro 2.</p>
+  </div>
+  <div class="col-md-4">
+    <img src="https://via.placeholder.com/350x200?text=Libro+3" alt="Libro 3" class="img-fluid rounded">
+    <h3 class="mt-2">Titolo Libro 3</h3>
+    <p>Breve descrizione del libro 3.</p>
+  </div>
+</div>
 {% endblock %}
