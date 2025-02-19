@@ -30,9 +30,9 @@ CREATE TABLE Utenti (
     nome VARCHAR(255) NOT NULL,
     cognome VARCHAR(255) NOT NULL,
     dataNascita DATE NOT NULL,
-    email VARCHAR(50) NOT NULL unique,
+    email VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    CHECK (email LIKE '%_@__%.__%')
+    CHECK (email LIKE  '%@%.%')
 );
 
 -- Tabella dei prestiti, collegata a Libro e Utenti
