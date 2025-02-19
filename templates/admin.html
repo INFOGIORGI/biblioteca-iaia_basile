@@ -1,95 +1,54 @@
 {% extends "base.html" %}
-{% block title %}Area Utente - Biblioteca{% endblock %}
+{% block title %}Admin - Aggiungi Libri{% endblock %}
 
 {% block content %}
-<h2>Area Utente</h2>
-
-<!-- Sezione ricerca per parola chiave -->
-<div class="mb-4">
-  <h4>Cerca per Parola Chiave</h4>
-  <form method="post" action="/user">
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="Inserisci parola chiave" name="keyword">
-      <button class="btn btn-primary" type="submit">Cerca</button>
-    </div>
-  </form>
-</div>
-
-<!-- Sezione ordinamento -->
-<div class="mb-4">
-  <h4>Ordinamento dei Libri</h4>
-  <div class="btn-group" role="group" aria-label="Ordinamento">
-    <button type="button" class="btn btn-secondary">Per Autore</button>
-    <button type="button" class="btn btn-secondary">Per Titolo</button>
+<h2>Area Admin: Aggiungi un nuovo libro</h2>
+<form method="post" action="/admin">
+  <div class="mb-3">
+    <label for="titolo" class="form-label">Titolo</label>
+    <input type="text" class="form-control" id="titolo" name="titolo" required>
   </div>
-</div>
+  <div class="mb-3">
+    <label for="isbn" class="form-label">ISBN</label>
+    <input type="text" class="form-control" id="isbn" name="isbn" required>
+  </div>
+  <div class="mb-3">
+    <label for="genere" class="form-label">Genere</label>
+    <input type="text" class="form-control" id="genere" name="genere" required>
+  </div>
+  <div class="mb-3">
+    <label for="piano" class="form-label">Piano</label>
+    <input type="text" class="form-control" id="piano" name="piano" required>
+  </div>
+  <div class="mb-3">
+    <label for="scaffale" class="form-label">Scaffale</label>
+    <input type="text" class="form-control" id="scaffale" name="scaffale" required>
+  </div>
+  <div class="mb-3">
+    <label for="posizione" class="form-label">Posizione</label>
+    <input type="text" class="form-control" id="posizione" name="posizione" required>
+  </div>
+  <div class="mb-3">
+    <label for="autori" class="form-label">Autori (separati da virgole)</label>
+    <input type="text" class="form-control" id="autori" name="autori" required>
+  </div>
+  <div class="mb-3">
+    <label for="riassunto" class="form-label">Riassunto (facoltativo)</label>
+    <textarea class="form-control" id="riassunto" name="riassunto"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Aggiungi Libro</button>
+</form>
 
-<!-- Sezione filtro per genere -->
-<div class="mb-4">
-  <h4>Filtra Libri per Genere</h4>
-  <select class="form-select" aria-label="Filtra per genere">
-    <option selected>Seleziona genere</option>
-    <option value="1">Fantasy</option>
-    <option value="2">Giallo</option>
-    <option value="3">Romanzo</option>
-    <option value="4">Storia</option>
-    <option value="5">Altro</option>
-  </select>
-</div>
+{% if message == 1 %}
+<script>
+  alert("Libro inserito");
+</script>
+{% endif %}
 
-<!-- Lista libri con riassunto -->
-<div class="mb-4">
-  <h4>Lista Libri</h4>
+{% if message == 0 %}
+<script>
+  alert("Inserimento fallito");
+</script>
+{% endif %}
 
-  {% for libro in libri %}
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">{{ libro[1] }}</h5>
-        <p class="card-text">
-          Autore: 
-          {% for autore in autori %}
-            {% if autore[3] == libro[0] %}
-              {{ autore[1] }} {{ autore[2] }}
-            {% endif %}
-          {% endfor %}
-        </p>
-        <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#riassunto{{ loop.index }}" 
-                aria-expanded="false" aria-controls="riassunto{{ loop.index }}">
-          Visualizza Riassunto
-        </button>
-        <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#aggiungiRiassuntoModal{{ loop.index }}">
-          Aggiungi Riassunto
-        </button>
-        <div class="collapse mt-2" id="riassunto{{ loop.index }}">
-          <div class="card card-body">
-            {{ libro[3] }}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal per aggiungere il riassunto -->
-    <div class="modal fade" id="aggiungiRiassuntoModal{{ loop.index }}" tabindex="-1" aria-labelledby="aggiungiRiassuntoModalLabel{{ loop.index }}" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="aggiungiRiassuntoModalLabel{{ loop.index }}">Aggiungi Riassunto per {{ libro[1] }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form method="post" action="/aggiungiRiassunto">
-              <div class="mb-3">
-                <label for="riassunto{{ loop.index }}" class="form-label">Riassunto</label>
-                <textarea class="form-control" id="riassunto{{ loop.index }}" name="riassunto" required></textarea>
-              </div>
-              <input type="hidden" name="isbn" value="{{ libro[0] }}">
-              <button type="submit" class="btn btn-primary">Aggiungi Riassunto</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  {% endfor %}
-
-</div>
 {% endblock %}
