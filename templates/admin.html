@@ -2,6 +2,9 @@
 {% block title %}Admin - Aggiungi Libri{% endblock %}
 
 {% block content %}
+<div class="btn-group" role="group" aria-label="Ordinamento">
+  <a href="{{ url_for('registerAdmin') }}" class="btn btn-secondary">Registra Admin</a>
+</div>
 <h2>Area Admin: Aggiungi un nuovo libro</h2>
 <form method="post" action="/admin">
   <div class="mb-3">
@@ -39,16 +42,6 @@
   <button type="submit" class="btn btn-primary">Aggiungi Libro</button>
 </form>
 
-{% if message == 1 %}
-<script>
-  alert("Libro inserito");
-</script>
-{% endif %}
 
-{% if message == 0 %}
-<script>
-  alert("Inserimento fallito");
-</script>
-{% endif %}
 
 {% endblock %}

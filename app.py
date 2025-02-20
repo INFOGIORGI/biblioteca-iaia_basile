@@ -20,7 +20,13 @@ def log_in():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
-        if db.logIn(mysql, email, password):
+        value=db.logIn(mysql, email, password)
+        print(value)
+        if value =="admin":
+            print("admin")
+            return redirect(url_for("admin"))
+        elif value=="user":
+            print("user")
             return redirect(url_for("users"))
     return render_template("login.html")
 
@@ -36,7 +42,7 @@ def register():
         conf = request.form.get("confirm_password")
 
         if password == conf:
-            if db.registrazione(mysql, tessera, nome, cognome, data_nascita, email, password):
+            if db.registrazione(mysql, tessera, nome, cognome, data_nascita, email, password,0):
                 return redirect(url_for("log_in"))
     return render_template("register.html")
 
@@ -83,5 +89,22 @@ def aggiungi_riassunto():
     if db.aggiungi_riassunto(mysql, isbn, riassunto):
         return redirect(url_for("users"))
     return "Errore nell'aggiunta del riassunto", 400
+
+@app.route("/registerAdmin",methods=["GET","POST"])
+def registerAdmin():
+    if request.method == "POST":
+        print("sono qui")
+        tessera = request.form.get("tessera")
+        nome = request.form.get("nome")
+        cognome = request.form.get("cognome")
+        data_nascita = request.form.get("datanascita")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        conf = request.form.get("confirm_password")
+
+        if password == conf:
+            if db.registrazione(mysql, tessera, nome, cognome, data_nascita, email, password,1):
+                return redirect(url_for("log_in"))
+    return render_template("registerAdmin.html")
 
 app.run(debug=True)

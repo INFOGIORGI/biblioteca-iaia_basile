@@ -76,7 +76,7 @@ def filtraGenere(mysql, genere):
     cursor.execute("SELECT * FROM Libro WHERE genere = %s", (genere,))
     return cursor.fetchall()
 
-def registrazione(mysql, tessera, nome, cognome, datanascita, email, password):
+def registrazione(mysql, tessera, nome, cognome, datanascita, email, password,user):
     if not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email):#VERIFICA LA VALIDITA DELLA MAIL
         return False
     
@@ -84,19 +84,27 @@ def registrazione(mysql, tessera, nome, cognome, datanascita, email, password):
     cursor.execute("SELECT * FROM Utenti WHERE email = %s OR tesseraCliente = %s", (email, tessera))
     if cursor.fetchone():
         return False
-    
-    cursor.execute("INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password) VALUES (%s, %s, %s, %s, %s, %s)",
-                   (tessera, nome, cognome, datanascita, email, generate_password_hash(password)))
+    if user==0:
+        cursor.execute("INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password) VALUES (%s, %s, %s, %s, %s, %s)",
+                    (tessera, nome, cognome, datanascita, email, generate_password_hash(password)))
+    else:
+        cursor.execute("INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password,is_admin) VALUES (%s, %s, %s, %s, %s, %s,1)",
+                    (tessera, nome, cognome, datanascita, email, generate_password_hash(password)))
     mysql.connection.commit()
     return True
 
 def logIn(mysql, email, password):
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT password FROM Utenti WHERE email = %s", (email,))
+    cursor.execute("SELECT * FROM Utenti WHERE email = %s", (email,))
     dati = cursor.fetchone()
-    if dati and check_password_hash(dati[0], password):
-        return False
-    return True
+
+    
+    if dati and  dati[5]==1 and check_password_hash(dati[6], password):
+            return "admin"
+    if dati and check_password_hash(dati[6], password):
+        
+        return "user"
+    return False
 
 def mostraRiassunto(mysql, isbn):
     cursor = mysql.connection.cursor()
