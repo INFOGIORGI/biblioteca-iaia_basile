@@ -8,7 +8,7 @@ def insertLibro_Catalogo(mysql, titolo, isbn, genere, piano, scaffale, posizione
 
     # Controlla se l'ISBN esiste già
     cursor.execute("SELECT isbn FROM Libro WHERE isbn = %s", (isbn,))
-    if cursor.fetchone():
+    if cursor.fetchone():#prende solo il primo set
         return "Errore: Il libro con ISBN esiste già."
 
     # Inserisci il libro nella tabella Libro
@@ -38,22 +38,23 @@ def insertLibro_Catalogo(mysql, titolo, isbn, genere, piano, scaffale, posizione
         nome, cognome = nome_cognome
         cursor.execute("SELECT id FROM Autore WHERE nome = %s AND cognome = %s", (nome, cognome))
         autore_id = cursor.fetchone()
-        if not autore_id:
+        if not autore_id:#Se l'autore non esiste lo inserisci 
             cursor.execute("INSERT INTO Autore (nome, cognome) VALUES (%s, %s)", (nome, cognome))
             autore_id = cursor.lastrowid
-        else:
+        else:#lo referenzio se esiste
             autore_id = autore_id[0]
         cursor.execute("INSERT INTO Libro_Autore (id_libro, id_autore) VALUES (%s, %s)", (isbn, autore_id))
     
     mysql.connection.commit()
     return "Libro inserito con successo."
 
-def ricercaParolaChiave(mysql, parola, posizione):
+def ricercaParolaChiave(mysql, parola):
     cursor = mysql.connection.cursor()
-    pattern = [f"{parola}%", f"%{parola}%", f"%{parola}"]
-    query = "SELECT * FROM Libro WHERE titolo LIKE %s" if 0 <= posizione <= 2 else "SELECT * FROM Libro"
-    cursor.execute(query, (pattern[posizione],) if 0 <= posizione <= 2 else None)
+    pattern = f"%{parola}%"
+    query = "SELECT * FROM Libro WHERE titolo LIKE %s"
+    cursor.execute(query, (pattern,))
     return cursor.fetchall()
+
 
 def ordinamento(mysql, dato):
     cursor = mysql.connection.cursor()
@@ -76,26 +77,26 @@ def filtraGenere(mysql, genere):
     return cursor.fetchall()
 
 def registrazione(mysql, tessera, nome, cognome, datanascita, email, password):
-    if not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email):
-        return "Formato email non valido."
+    if not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email):#VERIFICA LA VALIDITA DELLA MAIL
+        return False
     
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT 1 FROM Utenti WHERE email = %s OR tesseraCliente = %s", (email, tessera))
+    cursor.execute("SELECT * FROM Utenti WHERE email = %s OR tesseraCliente = %s", (email, tessera))
     if cursor.fetchone():
-        return "Errore: Email o tessera già registrati."
+        return False
     
     cursor.execute("INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password) VALUES (%s, %s, %s, %s, %s, %s)",
                    (tessera, nome, cognome, datanascita, email, generate_password_hash(password)))
     mysql.connection.commit()
-    return "Registrazione avvenuta con successo."
+    return True
 
 def logIn(mysql, email, password):
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT password FROM Utenti WHERE email = %s", (email,))
     dati = cursor.fetchone()
     if dati and check_password_hash(dati[0], password):
-        return "Login effettuato con successo."
-    return "Email o password errati."
+        return False
+    return True
 
 def mostraRiassunto(mysql, isbn):
     cursor = mysql.connection.cursor()
@@ -117,7 +118,7 @@ def aggiungi_riassunto(mysql, isbn, riassunto):
     cursor = mysql.connection.cursor()
     cursor.execute("UPDATE Libro SET riassunto = %s WHERE isbn = %s", (riassunto, isbn))
     mysql.connection.commit()
-    return "Riassunto aggiornato."
+    return True
 
 def getGeneri(mysql):
     cursor = mysql.connection.cursor()

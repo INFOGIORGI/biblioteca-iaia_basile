@@ -6,8 +6,8 @@ app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = '138.41.20.102'
 app.config['MYSQL_PORT'] = 53306
-app.config['MYSQL_USER'] = 'ospite'
-app.config['MYSQL_PASSWORD'] = 'ospite'
+app.config['MYSQL_USER'] = '5di'
+app.config['MYSQL_PASSWORD'] = 'colazzo'
 app.config['MYSQL_DB'] = 'iaia_basile'
 mysql = MySQL(app)
 
@@ -42,8 +42,8 @@ def register():
 
 @app.route("/user", methods=["GET", "POST"])
 def users():
-    keyword = request.form.get("keyword", "") if request.method == "POST" else ""
-    libri = db.ricercaParolaChiave(mysql, "keyword", 1)
+    keyword = request.form.get("keyword")
+    libri = db.ricercaParolaChiave(mysql, keyword)
     autori = db.getAutori(mysql)
     generi = db.getGeneri(mysql)
     return render_template("user.html", libri=libri, autori=autori, generi=generi)
@@ -72,7 +72,7 @@ def admin():
         posizione = request.form.get("posizione")
         autori = request.form.get("autori")
         riassunto = request.form.get("riassunto")
-        message = 1 if db.insertLibrio_Catalogo(mysql, titolo, isbn, genere, piano, scaffale, posizione, autori, riassunto) else 0
+        message = 1 if db.insertLibro_Catalogo(mysql, titolo, isbn, genere, piano, scaffale, posizione, autori, riassunto) else 0
         return render_template("admin.html", message=message)
     return render_template("admin.html", message=3)
 
