@@ -31,6 +31,7 @@ CREATE TABLE Utenti (
     cognome VARCHAR(255) NOT NULL,
     dataNascita DATE NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
+    is_admin BOOLEAN;
     password VARCHAR(255) NOT NULL,
     CHECK (email LIKE  '%@%.%')
 );

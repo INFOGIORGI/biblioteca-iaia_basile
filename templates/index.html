@@ -1,27 +1,43 @@
 {% extends "base.html" %}
-{% block title %}Home - Biblioteca{% endblock %}
+
+{% block title %}Home - Biblioteca Brindisi{% endblock %}
 
 {% block content %}
-<div class="jumbotron text-center">
-  <h1 class="display-4">Benvenuti nella Biblioteca!</h1>
-  <p class="lead">Scopri una vasta collezione di libri e tanto altro.</p>
-</div>
+  <div class="text-center">
+    <h1 class="display-4">Benvenuti nella Biblioteca di Brindisi</h1>
+    <p class="lead">Scopri il nostro vasto catalogo di libri e risorse.</p>
+  </div>
 
-<div class="row mt-4">
-  <div class="col-md-4">
-    <img src="https://via.placeholder.com/350x200?text=Libro+1" alt="Libro 1" class="img-fluid rounded">
-    <h3 class="mt-2">Titolo Libro 1</h3>
-    <p>Breve descrizione del libro 1.</p>
+  <div class="row mt-5">
+    <div class="col-lg-6">
+      <h2>Chi siamo</h2>
+      <p>La Biblioteca di Brindisi è un luogo dedicato alla cultura e alla conoscenza. Fondata nel cuore della città, offre una vasta selezione di libri, risorse digitali e attività culturali per tutti. Che tu sia uno studente, un ricercatore o un appassionato di lettura, troverai il materiale giusto per le tue esigenze.</p>
+      <p>La nostra missione è quella di promuovere la lettura, la ricerca e l'apprendimento, offrendo un ambiente accogliente e stimolante per tutti i visitatori.</p>
+    </div>
+    <div class="col-lg-6">
+      <h2>I nostri servizi</h2>
+      <ul>
+        <li>Accesso gratuito a migliaia di libri di ogni genere e per tutte le età.</li>
+        <li>Catalogo online per consultare e prenotare libri comodamente da casa.</li>
+        <li>Area studio con Wi-Fi gratuito e postazioni computer per la ricerca e la scrittura.</li>
+        <li>Eventi culturali, workshop e presentazioni di libri con autori locali e internazionali.</li>
+        <li>Sezione di lettura per bambini e ragazzi, con attività formative e ludiche.</li>
+      </ul>
+    </div>
   </div>
-  <div class="col-md-4">
-    <img src="https://via.placeholder.com/350x200?text=Libro+2" alt="Libro 2" class="img-fluid rounded">
-    <h3 class="mt-2">Titolo Libro 2</h3>
-    <p>Breve descrizione del libro 2.</p>
+
+  <div class="row mt-5">
+    <div class="col-12">
+      <h2>Un'ampia scelta di libri</h2>
+      <p>La nostra biblioteca dispone di oltre 50.000 libri che spaziano dalla narrativa alla saggistica, dalla filosofia alla scienza, con una particolare attenzione alla letteratura locale e regionale. Grazie a un sistema di catalogazione avanzato, puoi trovare facilmente il libro che cerchi, sia che si tratti di un titolo specifico, di un autore, o di un argomento che ti interessa.</p>
+      <p>Ogni settimana aggiungiamo nuovi titoli e risorse digitali al nostro catalogo, garantendo sempre un'ampia varietà di scelta per tutti.</p>
+    </div>
   </div>
-  <div class="col-md-4">
-    <img src="https://via.placeholder.com/350x200?text=Libro+3" alt="Libro 3" class="img-fluid rounded">
-    <h3 class="mt-2">Titolo Libro 3</h3>
-    <p>Breve descrizione del libro 3.</p>
+
+  <div class="row mt-5">
+    <div class="col-12">
+      <h2>Contattaci</h2>
+      <p>La Biblioteca di Brindisi è aperta dal lunedì al sabato, dalle 9:00 alle 19:00. Puoi visitare la nostra sede in via Roma, 45, Brindisi, oppure contattarci via email all'indirizzo biblioteca@brindisi.it per qualsiasi domanda o richiesta.</p>
+    </div>
   </div>
-</div>
 {% endblock %}
