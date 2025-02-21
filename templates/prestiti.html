@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Prestiti libri{% endblock %}
+
+{% block content %}
+<!-- Lista libri con riassunto -->
+<div class="mb-4">
+    <h4>Lista Libri</h4>
+  
+    {% for libro in libri %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ libro[1] }}</h5>
+          <p class="card-text">
+            Autore: 
+            {% for autore in autori %}
+              {% if autore[3] == libro[0] %}
+                {{ autore[1] }} {{ autore[2] }}
+              {% endif %}
+            {% endfor %}
+          </p>
+          <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#riassunto{{ loop.index }}" 
+                  aria-expanded="false" aria-controls="riassunto{{ loop.index }}">
+            Visualizza Riassunto
+          </button>
+          <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#aggiungiRiassuntoModal{{ loop.index }}">
+            Presta
+          </button>
+          <div class="collapse mt-2" id="riassunto{{ loop.index }}">
+            <div class="card card-body">
+              {{ libro[3] }}
+            </div>
+          </div>
+        </div>
+      </div>
+{%endblock%}

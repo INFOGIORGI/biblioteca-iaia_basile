@@ -132,3 +132,19 @@ def getGeneri(mysql):
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT DISTINCT genere FROM Libro")
     return cursor.fetchall()
+
+def presta(mysql,isbn,tessea_utente,data_inizio,data_fine):
+    cursor=mysql.connection.cursor()
+    cursor.execute("SELECT id,isPrestato FROM Catalogo where isbn=%s",(isbn,))
+    libro=cursor.fetchone()
+    if libro[1]==0:
+        cursor.execute("SELECT * FROM Prestiti where id_libro=%s and id_utente=%s and dataInizio=%s",(isbn,tessea_utente,data_inizio))
+        if cursor.fetchone():
+            print("libro gia in prestito dall'utente")
+            return False
+        else:
+            cursor.execute("INSERT INTO Prestiti (id_libro,id_utente,dataInizio,dataFine) VALUE(%s,%s,%s,%s)", (isbn,tessea_utente,data_inizio,data_fine))
+            cursor.execute("UPDATE Catalogo set isPrestato=1 where id=%s",(libro[0]))
+    
+    mysql.connection.commit()
+    return True

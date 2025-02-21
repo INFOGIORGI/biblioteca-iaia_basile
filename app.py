@@ -107,4 +107,12 @@ def registerAdmin():
                 return redirect(url_for("log_in"))
     return render_template("registerAdmin.html")
 
+@app.route("/prestiti")
+def presta():
+    if request.method=="POST":
+        pass
+    else
+
+
+
 app.run(debug=True)
