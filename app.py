@@ -48,11 +48,18 @@ def register():
 
 @app.route("/user", methods=["GET", "POST"])
 def users():
-    keyword = request.form.get("keyword")
-    libri = db.ricercaParolaChiave(mysql, keyword)
+    libri = db.getLibri(mysql)
     autori = db.getAutori(mysql)
     generi = db.getGeneri(mysql)
     return render_template("user.html", libri=libri, autori=autori, generi=generi)
+
+@app.route("/parolaChiave",methods=["POST"])
+def parolaChiave():
+    parola=request.form.get("keyword")
+    libri = db.ricercaParolaChiave(mysql,parola)
+    autori = db.getAutori(mysql)
+    generi = db.getGeneri(mysql)
+    return render_template("user.html", libri=libri, autori=autori, generi=generi)    
 
 @app.route("/ordinaPerAutore")
 def ordina_per_autore():
@@ -107,11 +114,22 @@ def registerAdmin():
                 return redirect(url_for("log_in"))
     return render_template("registerAdmin.html")
 
-@app.route("/prestiti")
+@app.route("/prestiti",methods=["GET","POST"])
 def presta():
     if request.method=="POST":
-        pass
-    else
+        isbn=request.form.get("isbn")
+        tessera=request.form.get("tessera")
+        data_inizio=request.form.get("datainizio")
+        data_fine=request.form.get("datafine")
+        db.presta(mysql,isbn,tessera,data_inizio,data_fine)
+        libri=db.getLibri(mysql)
+        return render_template("prestiti.html", libri=libri, autori=db.getAutori(mysql), generi=db.getGeneri(mysql))
+
+    else:
+        libri=db.getLibri(mysql)
+        return render_template("prestiti.html", libri=libri, autori=db.getAutori(mysql), generi=db.getGeneri(mysql))
+
+        
 
 
 

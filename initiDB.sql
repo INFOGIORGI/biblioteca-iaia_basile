@@ -21,7 +21,7 @@ CREATE TABLE Libro (
     isbn VARCHAR(13) PRIMARY KEY,
     titolo VARCHAR(255) NOT NULL,
     genere VARCHAR(30),
-  	riassunto text(255)
+    riassunto TEXT
 );
 
 -- Tabella degli utenti (correzione della sintassi e controllo formato email)
@@ -31,9 +31,9 @@ CREATE TABLE Utenti (
     cognome VARCHAR(255) NOT NULL,
     dataNascita DATE NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
-    is_admin BOOLEAN;
+    is_admin BOOLEAN NOT NULL DEFAULT 0,
     password VARCHAR(255) NOT NULL,
-    CHECK (email LIKE  '%@%.%')
+    CHECK (email LIKE '%@%.%')
 );
 
 -- Tabella dei prestiti, collegata a Libro e Utenti
@@ -65,7 +65,7 @@ CREATE TABLE Locazione (
     UNIQUE (piano, scaffale, posizione)
 );
 
--- Modifichiamo la tabella Catalogo per fare riferimento alla tabella Locazione
+
 CREATE TABLE Catalogo (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     isbn VARCHAR(13) NOT NULL,

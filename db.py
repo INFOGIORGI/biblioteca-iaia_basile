@@ -51,7 +51,13 @@ def insertLibro_Catalogo(mysql, titolo, isbn, genere, piano, scaffale, posizione
 def ricercaParolaChiave(mysql, parola):
     cursor = mysql.connection.cursor()
     pattern = f"%{parola}%"
-    query = "SELECT * FROM Libro WHERE titolo LIKE %s"
+    query = """SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere, a.nome, a.cognome
+                FROM Libro l
+                JOIN Catalogo c ON l.isbn = c.isbn
+                JOIN Locazione loc ON c.id_locazione = loc.id
+                JOIN Libro_Autore la ON l.isbn = la.id_libro
+                JOIN Autore a ON la.id_autore = a.id 
+                WHERE l.titolo LIKE %s"""
     cursor.execute(query, (pattern,))
     return cursor.fetchall()
 
@@ -59,13 +65,20 @@ def ricercaParolaChiave(mysql, parola):
 def ordinamento(mysql, dato):
     cursor = mysql.connection.cursor()
     if dato == 0:
-        query = "SELECT isbn, titolo FROM Libro ORDER BY titolo;"
+        query = """SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere, a.nome, a.cognome
+                FROM Libro l
+                JOIN Catalogo c ON l.isbn = c.isbn
+                JOIN Locazione loc ON c.id_locazione = loc.id
+                JOIN Libro_Autore la ON l.isbn = la.id_libro
+                JOIN Autore a ON la.id_autore = a.id  ORDER BY titolo;"""
     else:
         query = """
-        SELECT l.isbn, l.titolo, a.nome, a.cognome
+        SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere, a.nome, a.cognome
         FROM Libro l
+        JOIN Catalogo c ON l.isbn = c.isbn
+        JOIN Locazione loc ON c.id_locazione = loc.id
         JOIN Libro_Autore la ON l.isbn = la.id_libro
-        JOIN Autore a ON la.id_autore = a.id
+        JOIN Autore a ON la.id_autore = a.id 
         ORDER BY a.nome, a.cognome;
         """
     cursor.execute(query)
@@ -73,7 +86,13 @@ def ordinamento(mysql, dato):
 
 def filtraGenere(mysql, genere):
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM Libro WHERE genere = %s", (genere,))
+    cursor.execute("""SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere, a.nome, a.cognome
+                    FROM Libro l
+                    JOIN Catalogo c ON l.isbn = c.isbn
+                    JOIN Locazione loc ON c.id_locazione = loc.id
+                    JOIN Libro_Autore la ON l.isbn = la.id_libro
+                    JOIN Autore a ON la.id_autore = a.id  
+                    WHERE genere = %s""", (genere,))
     return cursor.fetchall()
 
 def registrazione(mysql, tessera, nome, cognome, datanascita, email, password,user):
@@ -85,9 +104,11 @@ def registrazione(mysql, tessera, nome, cognome, datanascita, email, password,us
     if cursor.fetchone():
         return False
     if user==0:
+        # user
         cursor.execute("INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password) VALUES (%s, %s, %s, %s, %s, %s)",
                     (tessera, nome, cognome, datanascita, email, generate_password_hash(password)))
     else:
+        # admin
         cursor.execute("INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password,is_admin) VALUES (%s, %s, %s, %s, %s, %s,1)",
                     (tessera, nome, cognome, datanascita, email, generate_password_hash(password)))
     mysql.connection.commit()
@@ -133,6 +154,20 @@ def getGeneri(mysql):
     cursor.execute("SELECT DISTINCT genere FROM Libro")
     return cursor.fetchall()
 
+def getLibri(mysql):
+    cursor = mysql.connection.cursor()
+    
+    query = """
+    SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere, a.nome, a.cognome
+    FROM Libro l
+    JOIN Catalogo c ON l.isbn = c.isbn
+    JOIN Locazione loc ON c.id_locazione = loc.id
+    JOIN Libro_Autore la ON l.isbn = la.id_libro
+    JOIN Autore a ON la.id_autore = a.id
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
 def presta(mysql,isbn,tessea_utente,data_inizio,data_fine):
     cursor=mysql.connection.cursor()
     cursor.execute("SELECT id,isPrestato FROM Catalogo where isbn=%s",(isbn,))
@@ -144,7 +179,7 @@ def presta(mysql,isbn,tessea_utente,data_inizio,data_fine):
             return False
         else:
             cursor.execute("INSERT INTO Prestiti (id_libro,id_utente,dataInizio,dataFine) VALUE(%s,%s,%s,%s)", (isbn,tessea_utente,data_inizio,data_fine))
-            cursor.execute("UPDATE Catalogo set isPrestato=1 where id=%s",(libro[0]))
+            cursor.execute("UPDATE Catalogo set isPrestato=1 where id=%s",(libro[0],))
     
     mysql.connection.commit()
     return True

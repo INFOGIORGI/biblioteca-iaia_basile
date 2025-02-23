@@ -7,7 +7,7 @@
 <!-- Sezione ricerca per parola chiave -->
 <div class="mb-4">
   <h4>Cerca per Parola Chiave</h4>
-  <form method="post" action="/user">
+  <form method="post" action="/parolaChiave">
     <div class="input-group">
       <input type="text" class="form-control" placeholder="Inserisci parola chiave" name="keyword">
       <button class="btn btn-primary" type="submit">Cerca</button>
@@ -53,6 +53,19 @@
             {% endif %}
           {% endfor %}
         </p>
+
+        <p class="card-text">
+          <strong>Posizione:</strong> Piano {{ libro[4] }}, Scaffale {{ libro[5] }}, Posizione {{ libro[6] }}
+        </p>
+
+        <p class="card-text">
+          <strong>Disponibilità:</strong> 
+          {% if libro[3] == 0 %}
+            <span class="text-success">Disponibile</span>
+          {% else %}
+            <span class="text-danger">Già in prestito</span>
+          {% endif %}
+        </p>
         <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#riassunto{{ loop.index }}" 
                 aria-expanded="false" aria-controls="riassunto{{ loop.index }}">
           Visualizza Riassunto
@@ -62,7 +75,7 @@
         </button>
         <div class="collapse mt-2" id="riassunto{{ loop.index }}">
           <div class="card card-body">
-            {{ libro[3] }}
+            {{ libro[2] }}
           </div>
         </div>
       </div>
@@ -93,3 +106,8 @@
 
 </div>
 {% endblock %}
+
+
+
+
+

@@ -2,34 +2,82 @@
 {% block title %}Prestiti libri{% endblock %}
 
 {% block content %}
-<!-- Lista libri con riassunto -->
+<!-- Lista libri con prestito -->
 <div class="mb-4">
-    <h4>Lista Libri</h4>
-  
-    {% for libro in libri %}
-      <div class="card mb-3">
-        <div class="card-body">
-          <h5 class="card-title">{{ libro[1] }}</h5>
-          <p class="card-text">
-            Autore: 
-            {% for autore in autori %}
-              {% if autore[3] == libro[0] %}
-                {{ autore[1] }} {{ autore[2] }}
-              {% endif %}
-            {% endfor %}
-          </p>
-          <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#riassunto{{ loop.index }}" 
-                  aria-expanded="false" aria-controls="riassunto{{ loop.index }}">
-            Visualizza Riassunto
+  <h4>Lista Libri</h4>
+
+  {% for libro in libri %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ libro[1] }}</h5>
+        <p class="card-text">
+          Autore: 
+          {% for autore in autori %}
+            {% if autore[3] == libro[0] %}
+              {{ autore[1] }} {{ autore[2] }}
+            {% endif %}
+          {% endfor %}
+        </p>
+
+        <p class="card-text">
+          <strong>Posizione:</strong> Piano {{ libro[4] }}, Scaffale {{ libro[5] }}, Posizione {{ libro[6] }}
+        </p>
+
+        <p class="card-text">
+          <strong>Disponibilità:</strong> 
+          {% if libro[3] == 0 %}
+            <span class="text-success">Disponibile</span>
+          {% else %}
+            <span class="text-danger">Già in prestito</span>
+          {% endif %}
+        </p>
+
+      {% if libro[3]==0 %}
+          <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#aggiungiPrestitoModal{{ loop.index }}">
+            Aggiungi prestito
           </button>
-          <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#aggiungiRiassuntoModal{{ loop.index }}">
-            Presta
-          </button>
-          <div class="collapse mt-2" id="riassunto{{ loop.index }}">
-            <div class="card card-body">
-              {{ libro[3] }}
-            </div>
+      {% endif %} 
+          <div class="collapse mt-2" id="prestito{{ loop.index }}">
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal per aggiungere il prestito -->
+    <div class="modal fade" id="aggiungiPrestitoModal{{ loop.index }}" tabindex="-1" aria-labelledby="aggiungiPrestitoModalLabel{{ loop.index }}" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="aggiungiPrestitoModalLabel{{ loop.index }}">Aggiungi Prestito per {{ libro[1] }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="/prestiti">
+              <div class="mb-3">
+                
+                <div class="mb-3">
+                  <label for="isbn" class="form-label">ISBN</label>
+                  <input type="text" class="form-control" id="isbn" name="isbn" value="{{libro[0]}}" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="genere" class="form-label">Tessera Utente</label>
+                  <input type="text" class="form-control" id="tessera" name="tessera" required>
+                </div>
+                <div class="mb-3">
+                  <label for="piano" class="form-label">Data inizio</label>
+                  <input type="date" class="form-control" id="datainizio" name="datainizio" required>
+                </div>
+                <div class="mb-3">
+                  <label for="piano" class="form-label">Data fine</label>
+                  <input type="date" class="form-control" id="datafine" name="datafine" required>
+                </div>
+              </div>
+              <input type="hidden" name="isbn" value="{{ libro[0] }}">
+              <button type="submit" class="btn btn-primary">Aggiungi prestito</button>
+            </form>
           </div>
         </div>
       </div>
-{%endblock%}
+    </div>
+  {% endfor %}
+
+{% endblock %}
