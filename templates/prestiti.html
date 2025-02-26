@@ -37,12 +37,55 @@
             Aggiungi prestito
           </button>
       {% endif %} 
+      {% if libro[3]==1%}
+          <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#aggiungiPrestitoModal{{ loop.index }}">
+        Restituisci libro
+      </button>
+      {%endif%}
           <div class="collapse mt-2" id="prestito{{ loop.index }}">
         </div>
       </div>
     </div>
 
     <!-- Modal per aggiungere il prestito -->
+    <div class="modal fade" id="aggiungiPrestitoModal{{ loop.index }}" tabindex="-1" aria-labelledby="aggiungiPrestitoModalLabel{{ loop.index }}" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="aggiungiPrestitoModalLabel{{ loop.index }}">Aggiungi Prestito per {{ libro[1] }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="/prestiti">
+              <div class="mb-3">
+                
+                <div class="mb-3">
+                  <label for="isbn" class="form-label">ISBN</label>
+                  <input type="text" class="form-control" id="isbn" name="isbn" value="{{libro[0]}}" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="genere" class="form-label">Tessera Utente</label>
+                  <input type="text" class="form-control" id="tessera" name="tessera" required>
+                </div>
+                <div class="mb-3">
+                  <label for="piano" class="form-label">Data inizio</label>
+                  <input type="date" class="form-control" id="datainizio" name="datainizio" required>
+                </div>
+                <div class="mb-3">
+                  <label for="piano" class="form-label">Data fine</label>
+                  <input type="date" class="form-control" id="datafine" name="datafine" required>
+                </div>
+              </div>
+              <input type="hidden" name="isbn" value="{{ libro[0] }}">
+              <button type="submit" class="btn btn-primary">Aggiungi prestito</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modal per restituire il prestito -->
     <div class="modal fade" id="aggiungiPrestitoModal{{ loop.index }}" tabindex="-1" aria-labelledby="aggiungiPrestitoModalLabel{{ loop.index }}" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">

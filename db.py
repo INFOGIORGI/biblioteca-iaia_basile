@@ -65,12 +65,11 @@ def ricercaParolaChiave(mysql, parola):
 def ordinamento(mysql, dato):
     cursor = mysql.connection.cursor()
     if dato == 0:
-        query = """SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere, a.nome, a.cognome
+        query = """SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere
                 FROM Libro l
                 JOIN Catalogo c ON l.isbn = c.isbn
-                JOIN Locazione loc ON c.id_locazione = loc.id
-                JOIN Libro_Autore la ON l.isbn = la.id_libro
-                JOIN Autore a ON la.id_autore = a.id  ORDER BY titolo;"""
+                JOIN Locazione loc ON c.id_locazione = loc.id 
+                ORDER BY titolo;"""
     else:
         query = """
         SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere, a.nome, a.cognome
@@ -86,13 +85,11 @@ def ordinamento(mysql, dato):
 
 def filtraGenere(mysql, genere):
     cursor = mysql.connection.cursor()
-    cursor.execute("""SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere, a.nome, a.cognome
-                    FROM Libro l
-                    JOIN Catalogo c ON l.isbn = c.isbn
-                    JOIN Locazione loc ON c.id_locazione = loc.id
-                    JOIN Libro_Autore la ON l.isbn = la.id_libro
-                    JOIN Autore a ON la.id_autore = a.id  
-                    WHERE genere = %s""", (genere,))
+    cursor.execute("""      SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere
+                            FROM Libro l
+                            JOIN Catalogo c ON l.isbn = c.isbn
+                            JOIN Locazione loc ON c.id_locazione = loc.id  
+                            WHERE genere = %s""", (genere,))
     return cursor.fetchall()
 
 def registrazione(mysql, tessera, nome, cognome, datanascita, email, password,user):
@@ -158,12 +155,10 @@ def getLibri(mysql):
     cursor = mysql.connection.cursor()
     
     query = """
-    SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere, a.nome, a.cognome
+    SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere
     FROM Libro l
     JOIN Catalogo c ON l.isbn = c.isbn
     JOIN Locazione loc ON c.id_locazione = loc.id
-    JOIN Libro_Autore la ON l.isbn = la.id_libro
-    JOIN Autore a ON la.id_autore = a.id
     """
     cursor.execute(query)
     return cursor.fetchall()
@@ -182,4 +177,5 @@ def presta(mysql,isbn,tessea_utente,data_inizio,data_fine):
             cursor.execute("UPDATE Catalogo set isPrestato=1 where id=%s",(libro[0],))
     
     mysql.connection.commit()
-    return True
+
+    

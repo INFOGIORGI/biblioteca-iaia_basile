@@ -80,29 +80,8 @@
         </div>
       </div>
     </div>
+  {%endfor%}
 
-    <!-- Modal per aggiungere il riassunto -->
-    <div class="modal fade" id="aggiungiRiassuntoModal{{ loop.index }}" tabindex="-1" aria-labelledby="aggiungiRiassuntoModalLabel{{ loop.index }}" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="aggiungiRiassuntoModalLabel{{ loop.index }}">Aggiungi Riassunto per {{ libro[1] }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form method="post" action="/aggiungiRiassunto">
-              <div class="mb-3">
-                <label for="riassunto{{ loop.index }}" class="form-label">Riassunto</label>
-                <textarea class="form-control" id="riassunto{{ loop.index }}" name="riassunto" required></textarea>
-              </div>
-              <input type="hidden" name="isbn" value="{{ libro[0] }}">
-              <button type="submit" class="btn btn-primary">Aggiungi Riassunto</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  {% endfor %}
 
 </div>
 {% endblock %}
