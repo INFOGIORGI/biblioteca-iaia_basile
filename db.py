@@ -71,14 +71,20 @@ def ordinamento(mysql, dato):
                 JOIN Locazione loc ON c.id_locazione = loc.id 
                 ORDER BY titolo;"""
     else:
+        #GROUP_CONTACT RAGGRUPPA IN UN UNICA STRINGA TUTTI I NOMI DEGLI AUTORI DI UN LIBRO
+        #GROUPBY RAGGRUPPO I RISULTATI ESCLUDENDO GLI AUTORI PER EVITARE RIPETIZIONI
         query = """
-        SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, loc.piano, loc.scaffale, loc.posizione, l.genere, a.nome, a.cognome
-        FROM Libro l
-        JOIN Catalogo c ON l.isbn = c.isbn
-        JOIN Locazione loc ON c.id_locazione = loc.id
-        JOIN Libro_Autore la ON l.isbn = la.id_libro
-        JOIN Autore a ON la.id_autore = a.id 
-        ORDER BY a.nome, a.cognome;
+                        SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato, 
+                        loc.piano, loc.scaffale, loc.posizione, l.genere,
+                        GROUP_CONCAT(DISTINCT a.nome, ' ', a.cognome ORDER BY a.cognome, a.nome SEPARATOR ', ') AS autori 
+                        FROM Libro l
+                        JOIN Catalogo c ON l.isbn = c.isbn
+                        JOIN Locazione loc ON c.id_locazione = loc.id
+                        JOIN Libro_Autore la ON l.isbn = la.id_libro
+                        JOIN Autore a ON la.id_autore = a.id 
+                        GROUP BY l.isbn, l.titolo, l.riassunto, c.isPrestato, 
+                        loc.piano, loc.scaffale, loc.posizione, l.genere
+                        ORDER BY MIN(a.cognome), MIN(a.nome);
         """
     cursor.execute(query)
     return cursor.fetchall()
@@ -173,9 +179,21 @@ def presta(mysql,isbn,tessea_utente,data_inizio,data_fine):
             print("libro gia in prestito dall'utente")
             return False
         else:
-            cursor.execute("INSERT INTO Prestiti (id_libro,id_utente,dataInizio,dataFine) VALUE(%s,%s,%s,%s)", (isbn,tessea_utente,data_inizio,data_fine))
+            n_prestiti=cursor.execute("SELECT n_prestiti FROM Prestiti where id_libro=%s and id_utente=%s" ,(isbn,tessea_utente))
+            if n_prestiti:
+                cursor.execute("UPDATE Prestiti SET n_prestiti = %s + 1 WHERE id_libro = %s AND id_utente = %s;", (n_prestiti,isbn,tessea_utente))
+            else:
+                cursor.execute("INSERT INTO Prestiti (id_libro,id_utente,dataInizio,dataFine) VALUE(%s,%s,%s,%s)", (isbn,tessea_utente,data_inizio,data_fine))
+            
             cursor.execute("UPDATE Catalogo set isPrestato=1 where id=%s",(libro[0],))
     
     mysql.connection.commit()
 
     
+def deposita(mysql,isbn):
+    cursor=mysql.connection.cursor()
+    cursor.execute("SELECT id,isPrestato FROM Catalogo where isbn=%s",(isbn,))
+    libro=cursor.fetchone()
+    if libro and libro[1]==1:
+        cursor.execute("UPDATE Catalogo SET isPrestato=0")
+    mysql.connection.commit()

@@ -42,6 +42,7 @@ CREATE TABLE Prestiti (
     id_utente VARCHAR(255),
     dataInizio DATE NOT NULL,
     dataFine DATE,
+    n_prestiti INT DEFAULT 0,
     PRIMARY KEY (id_libro, id_utente, dataInizio),
     FOREIGN KEY (id_libro) REFERENCES Libro(isbn) ON DELETE CASCADE,
     FOREIGN KEY (id_utente) REFERENCES Utenti(tesseraCliente) ON DELETE CASCADE

@@ -131,6 +131,17 @@ def presta():
 
         
 
+@app.route("/deposita", methods=["GET","POST"])
+def deposita():
+    if request.method=="POST":
+        isbn=request.form.get("isbn")
+        db.deposita(mysql,isbn)
+        libri=db.getLibri(mysql)
+        return render_template("prestiti.html", libri=libri, autori=db.getAutori(mysql), generi=db.getGeneri(mysql))
+
+    else:
+        libri=db.getLibri(mysql)
+        return render_template("prestiti.html", libri=libri, autori=db.getAutori(mysql), generi=db.getGeneri(mysql))
 
 
 app.run(debug=True)
