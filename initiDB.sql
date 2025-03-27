@@ -110,7 +110,8 @@ INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password)
 ('T007', 'Giorgio', 'Ferri', '1982-04-30', 'giorgio.ferri@example.com', 'password7'),
 ('T008', 'Elena', 'Esposito', '1992-06-18', 'elena.esposito@example.com', 'password8'),
 ('T009', 'Francesco', 'Marino', '1988-08-09', 'francesco.marino@example.com', 'password9'),
-('T010', 'Martina', 'Colombo', '1998-02-14', 'martina.colombo@example.com', 'password10');
+('T010', 'Martina', 'Colombo', '1998-02-14', 'martina.colombo@example.com', 'password10'),
+("admin","admin","admin","2025-01-01","emaildelladmin@gmail.com",1,"scrypt:32768:8:1$S4zk3zdHhGyWNqgv$7bd72c88b31f9cb4b0807837cc7a3a8f0c89d675411ed032d4f32b640698c648d529fb9a525303ab36fbf297eb21f4063a430cda7015844a586730ea55134543");
 
 
 INSERT INTO Locazione (piano, scaffale, posizione) VALUES

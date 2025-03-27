@@ -22,7 +22,7 @@ def insertLibro_Catalogo(mysql, titolo, isbn, genere, piano, scaffale, posizione
     if not id_locazione:
         cursor.execute("INSERT INTO Locazione (piano, scaffale, posizione) VALUES (%s, %s, %s)",
                        (piano, scaffale, posizione))
-        id_locazione = cursor.lastrowid
+        id_locazione = cursor.lastrowid #prende l ultimo valore che inserisce
     else:
         id_locazione = id_locazione[0]
     
@@ -195,5 +195,5 @@ def deposita(mysql,isbn):
     cursor.execute("SELECT id,isPrestato FROM Catalogo where isbn=%s",(isbn,))
     libro=cursor.fetchone()
     if libro and libro[1]==1:
-        cursor.execute("UPDATE Catalogo SET isPrestato=0")
+        cursor.execute("UPDATE Catalogo SET isPrestato=0 WHERE isbn=%s",(isbn,))
     mysql.connection.commit()
