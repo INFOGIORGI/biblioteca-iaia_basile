@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Area Utente - Biblioteca{% endblock %}
-{% block logout%}<li class="nav-item"><a class="nav-link" href="/register">Log out</a></li>{%endblock%}
+{% block logout%}<li class="nav-item"><a class="nav-link" href="{{url_for('logout')}}">Log out</a></li>{%endblock%}
 
 
 {% block content %}
@@ -72,14 +72,38 @@
                 aria-expanded="false" aria-controls="riassunto{{ loop.index }}">
           Visualizza Riassunto
         </button>
-        <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#aggiungiRiassuntoModal{{ loop.index }}">
-          Aggiungi Riassunto
-        </button>
         <div class="collapse mt-2" id="riassunto{{ loop.index }}">
           <div class="card card-body">
             {{ libro[2] }}
           </div>
         </div>
+        <!-- Aggiungi Riassunto Modal -->
+        <div class="modal fade" id="aggiungiRiassuntoModal{{ loop.index }}" tabindex="-1" aria-labelledby="aggiungiRiassuntoModalLabel{{ loop.index }}" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="aggiungiRiassuntoModalLabel{{ loop.index }}">Aggiungi Riassunto per "{{ libro[1] }}"</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="{{ url_for('aggiungi_riassunto') }}" method="POST">
+                  <div class="mb-3">
+                    <label for="riassunto" class="form-label">Riassunto:</label>
+                    <textarea class="form-control" id="riassunto" name="riassunto" rows="5"></textarea>
+                  </div>
+                  <input type="hidden" name="isbn" value="{{ libro[0] }}">
+                  <button type="submit" class="btn btn-primary">Aggiungi Riassunto</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pulsante per aprire la modale -->
+        <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#aggiungiRiassuntoModal{{ loop.index }}">
+          Aggiungi Riassunto
+        </button>
+        
       </div>
     </div>
   {%endfor%}

@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% block title %}Prestiti libri{% endblock %}
-{% block logout%}<li class="nav-item"><a class="nav-link" href="/register">Log out</a></li>{%endblock%}
+{% block logout%}<li class="nav-item"><a class="nav-link" href="{{url_for('logout')}}">Log out</a></li>{%endblock%}
 
 {% block content %}
+<div class="btn-group" role="group" aria-label="Ordinamento">
+  <a href="{{ url_for('registerAdmin') }}" class="btn btn-secondary">Registra Admin</a>
+</div>
+<div class="btn-group" role="group" aria-label="Ordinamento">
+  <a href="{{ url_for('admin') }}" class="btn btn-secondary">Aggiungi libro</a>
+</div>
 <!-- Lista libri con prestito -->
 <div class="mb-4">
   <h4>Lista Libri</h4>

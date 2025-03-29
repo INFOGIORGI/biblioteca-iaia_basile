@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 {% block title %}Register - Biblioteca{% endblock %}
-{% block logout%}<li class="nav-item"><a class="nav-link" href="/register">Log out</a></li>{%endblock%}
-
+{% block logout%}<li class="nav-item"><a class="nav-link" href="{{url_for('logout')}}">Log out</a></li>{%endblock%}
 
 {% block content %}
+<div class="btn-group" role="group" aria-label="Ordinamento">
+  <a href="{{ url_for('admin') }}" class="btn btn-secondary">Aggiungi libro</a>
+</div>
+<div class="btn-group" role="group" aria-label="Ordinamento">
+  <a href="{{ url_for('presta') }}" class="btn btn-secondary">Registra Prestito</a>
+</div>
 <h2>Registrazione Nuovo Admin</h2>
 <form method="post" action="/registerAdmin">
   <div class="mb-3">
