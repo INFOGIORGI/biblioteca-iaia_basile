@@ -2,10 +2,11 @@
 DROP TABLE IF EXISTS Prestiti;
 DROP TABLE IF EXISTS Catalogo;
 DROP TABLE IF EXISTS Libro_Autore;
-DROP TABLE IF EXISTS Libro;
-DROP TABLE IF EXISTS Utenti;
 DROP TABLE IF EXISTS Autore;
 DROP TABLE IF EXISTS Locazione;
+DROP TABLE IF EXISTS Riassunti;
+DROP TABLE IF EXISTS Utenti;
+DROP TABLE IF EXISTS Libro;
 
 -- Tabella degli autori
 CREATE TABLE Autore (
@@ -20,8 +21,7 @@ CREATE TABLE Autore (
 CREATE TABLE Libro (
     isbn VARCHAR(13) PRIMARY KEY,
     titolo VARCHAR(255) NOT NULL,
-    genere VARCHAR(30),
-    riassunto TEXT
+    genere VARCHAR(30)
 );
 
 -- Tabella degli utenti (correzione della sintassi e controllo formato email)
@@ -42,7 +42,7 @@ CREATE TABLE Prestiti (
     id_utente VARCHAR(255),
     dataInizio DATE NOT NULL,
     dataFine DATE,
-    n_prestiti INT DEFAULT 0,
+    n_prestiti INT DEFAULT 1,
     PRIMARY KEY (id_libro, id_utente, dataInizio),
     FOREIGN KEY (id_libro) REFERENCES Libro(isbn) ON DELETE CASCADE,
     FOREIGN KEY (id_utente) REFERENCES Utenti(tesseraCliente) ON DELETE CASCADE
@@ -76,6 +76,17 @@ CREATE TABLE Catalogo (
     FOREIGN KEY (id_locazione) REFERENCES Locazione(id) ON DELETE SET NULL
 );
 
+DROP TABLE IF EXISTS Riassunti;
+CREATE TABLE Riassunti (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    isbn VARCHAR(13) NOT NULL,
+    tesseraCliente VARCHAR(255) NOT NULL,
+    riassunto TEXT NOT NULL,
+    dataInserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (isbn) REFERENCES Libro(isbn) ON DELETE CASCADE,
+    FOREIGN KEY (tesseraCliente) REFERENCES Utenti(tesseraCliente) ON DELETE CASCADE
+);
+
 INSERT INTO Autore (nome, cognome, dataNascita, dataMorte) VALUES
 ('Giuseppe', 'Verdi', '1813-10-10', '1901-01-27'),
 ('Antonio', 'Vivaldi', '1678-03-04', '1741-07-28'),
@@ -88,31 +99,32 @@ INSERT INTO Autore (nome, cognome, dataNascita, dataMorte) VALUES
 ('Elena', 'Ferrante', '1943-01-01', NULL),
 ('Carlo', 'Collodi', '1826-03-24', '1890-09-26');
 
-INSERT INTO Libro (isbn, titolo, genere, riassunto) VALUES
-    ('9781234567897', 'La Divina Commedia', 'Poema epico', 'Un viaggio immaginario attraverso Inferno, Purgatorio e Paradiso, scritto da Dante Alighieri.'),
-    ('9781234567898', 'I Promessi Sposi', 'Romanzo storico', 'La storia travagliata degli amori di Renzo e Lucia sullo sfondo della Lombardia del XVII secolo.'),
-    ('9781234567899', 'Il Gattopardo', 'Romanzo storico', 'Un ritratto della nobiltà siciliana durante il Risorgimento, centrato sulla figura del Principe di Salina.'),
-    ('9781234567800', 'Il Nome della Rosa', 'Romanzo storico/mistero', 'Un giallo ambientato in un monastero medievale, con protagonisti il monaco Guglielmo e il novizio Adso.'),
-    ('9781234567801', 'Il Barone Rampante', 'Romanzo di formazione', 'La storia di Cosimo, un giovane che decide di vivere sugli alberi per sfuggire alle convenzioni sociali.'),
-    ('9781234567802', "Cent'anni di solitudine", 'Romanzo', 'Una saga familiare che narra la storia dei Buendía in un villaggio immaginario in Colombia.'),
-    ('9781234567803', 'La coscienza di Zeno', 'Romanzo', 'Il racconto in prima persona di Zeno Cosini, un uomo alle prese con le sue nevrosi e introspezioni.'),
-    ('9781234567804', 'Se questo è un uomo', 'Memorie', 'La testimonianza di Primo Levi sulla sua prigionia nel campo di concentramento di Auschwitz.'),
-    ('9781234567805', 'Il fu Mattia Pascal', 'Romanzo', 'La vicenda di un uomo che, creduto morto, decide di cambiare identità e iniziare una nuova vita.'),
-    ('9781234567806', 'La luna e i falò', 'Romanzo', 'Il ritorno di un uomo emigrato in America al suo paese natale in Piemonte, alla ricerca delle sue radici.')
-;
-INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, password) VALUES
-('T001', 'Mario', 'Rossi', '1980-05-12', 'mario.rossi@example.com', 'password1'),
-('T002', 'Luigi', 'Verdi', '1975-09-23', 'luigi.verdi@example.com', 'password2'),
-('T003', 'Anna', 'Bianchi', '1990-07-15', 'anna.bianchi@example.com', 'password3'),
-('T004', 'Sara', 'Neri', '1985-03-08', 'sara.neri@example.com', 'password4'),
-('T005', 'Paolo', 'Verdi', '1970-12-01', 'paolo.verdi@example.com', 'password5'),
-('T006', 'Laura', 'Russo', '1995-11-22', 'laura.russo@example.com', 'password6'),
-('T007', 'Giorgio', 'Ferri', '1982-04-30', 'giorgio.ferri@example.com', 'password7'),
-('T008', 'Elena', 'Esposito', '1992-06-18', 'elena.esposito@example.com', 'password8'),
-('T009', 'Francesco', 'Marino', '1988-08-09', 'francesco.marino@example.com', 'password9'),
-('T010', 'Martina', 'Colombo', '1998-02-14', 'martina.colombo@example.com', 'password10'),
-("admin","admin","admin","2025-01-01","emaildelladmin@gmail.com",1,"scrypt:32768:8:1$S4zk3zdHhGyWNqgv$7bd72c88b31f9cb4b0807837cc7a3a8f0c89d675411ed032d4f32b640698c648d529fb9a525303ab36fbf297eb21f4063a430cda7015844a586730ea55134543");
 
+INSERT INTO Utenti (tesseraCliente, nome, cognome, dataNascita, email, is_admin, password) VALUES
+('T001', 'Mario', 'Rossi', '1980-05-12', 'mario.rossi@example.com', 0, 'scrypt:32768:8:1$FArjfPytjocKSAhK$8bb0af9c5f6a47110e80cd3bdffb7399cc5dad5950826926e82bd9316309ce1c408392d526c09813c5384097e3a0c9e199dba3a9cf65b46cbf0def5b8bbb22fb'),
+('T002', 'Luigi', 'Verdi', '1975-09-23', 'luigi.verdi@example.com', 0, 'scrypt:32768:8:1$FArjfPytjocKSAhK$8bb0af9c5f6a47110e80cd3bdffb7399cc5dad5950826926e82bd9316309ce1c408392d526c09813c5384097e3a0c9e199dba3a9cf65b46cbf0def5b8bbb22fb'),
+('T003', 'Anna', 'Bianchi', '1990-07-15', 'anna.bianchi@example.com', 0, 'scrypt:32768:8:1$FArjfPytjocKSAhK$8bb0af9c5f6a47110e80cd3bdffb7399cc5dad5950826926e82bd9316309ce1c408392d526c09813c5384097e3a0c9e199dba3a9cf65b46cbf0def5b8bbb22fb'),
+('T004', 'Sara', 'Neri', '1985-03-08', 'sara.neri@example.com', 0, 'scrypt:32768:8:1$FArjfPytjocKSAhK$8bb0af9c5f6a47110e80cd3bdffb7399cc5dad5950826926e82bd9316309ce1c408392d526c09813c5384097e3a0c9e199dba3a9cf65b46cbf0def5b8bbb22fb'),
+('T005', 'Paolo', 'Verdi', '1970-12-01', 'paolo.verdi@example.com', 0, 'scrypt:32768:8:1$FArjfPytjocKSAhK$8bb0af9c5f6a47110e80cd3bdffb7399cc5dad5950826926e82bd9316309ce1c408392d526c09813c5384097e3a0c9e199dba3a9cf65b46cbf0def5b8bbb22fb'),
+('T006', 'Laura', 'Russo', '1995-11-22', 'laura.russo@example.com', 0, 'scrypt:32768:8:1$FArjfPytjocKSAhK$8bb0af9c5f6a47110e80cd3bdffb7399cc5dad5950826926e82bd9316309ce1c408392d526c09813c5384097e3a0c9e199dba3a9cf65b46cbf0def5b8bbb22fb'),
+('T007', 'Giorgio', 'Ferri', '1982-04-30', 'giorgio.ferri@example.com', 0, 'scrypt:32768:8:1$FArjfPytjocKSAhK$8bb0af9c5f6a47110e80cd3bdffb7399cc5dad5950826926e82bd9316309ce1c408392d526c09813c5384097e3a0c9e199dba3a9cf65b46cbf0def5b8bbb22fb'),
+('T008', 'Elena', 'Esposito', '1992-06-18', 'elena.esposito@example.com', 0, 'scrypt:32768:8:1$FArjfPytjocKSAhK$8bb0af9c5f6a47110e80cd3bdffb7399cc5dad5950826926e82bd9316309ce1c408392d526c09813c5384097e3a0c9e199dba3a9cf65b46cbf0def5b8bbb22fb'),
+('T009', 'Francesco', 'Marino', '1988-08-09', 'francesco.marino@example.com', 0, 'scrypt:32768:8:1$FArjfPytjocKSAhK$8bb0af9c5f6a47110e80cd3bdffb7399cc5dad5950826926e82bd9316309ce1c408392d526c09813c5384097e3a0c9e199dba3a9cf65b46cbf0def5b8bbb22fb'),
+('T010', 'Martina', 'Colombo', '1998-02-14', 'martina.colombo@example.com', 0, 'scrypt:32768:8:1$FArjfPytjocKSAhK$8bb0af9c5f6a47110e80cd3bdffb7399cc5dad5950826926e82bd9316309ce1c408392d526c09813c5384097e3a0c9e199dba3a9cf65b46cbf0def5b8bbb22fb'),
+('admin', 'admin', 'admin', '2025-01-01', 'emaildelladmin@gmail.com', 1, 'scrypt:32768:8:1$S4zk3zdHhGyWNqgv$7bd72c88b31f9cb4b0807837cc7a3a8f0c89d675411ed032d4f32b640698c648d529fb9a525303ab36fbf297eb21f4063a430cda7015844a586730ea55134543');
+
+INSERT INTO Libro (isbn, titolo, genere) VALUES
+('9781234567897', 'La Divina Commedia', 'Poema epico'),
+('9781234567898', 'I Promessi Sposi', 'Romanzo storico'),
+('9781234567899', 'Il Gattopardo', 'Romanzo storico'),
+('9781234567800', 'Il Nome della Rosa', 'Romanzo storico/mistero'),
+('9781234567801', 'Il Barone Rampante', 'Romanzo di formazione'),
+('9781234567802', "Cent'anni di solitudine", 'Romanzo'),
+('9781234567803', 'La coscienza di Zeno', 'Romanzo'),
+('9781234567804', 'Se questo è un uomo', 'Memorie'),
+('9781234567805', 'Il fu Mattia Pascal', 'Romanzo'),
+('9781234567806', 'La luna e i falò', 'Romanzo')
+;
 
 INSERT INTO Locazione (piano, scaffale, posizione) VALUES
 ('1', 'A', '1'),

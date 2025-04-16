@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Storico Prestiti{% endblock %}
+{% block content %}
+  <h2>Storico dei Prestiti</h2>
+  {% if prestiti %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Titolo</th>
+          <th>Data inizio</th>
+          <th>Data fine</th>
+          <th>N° di prestiti</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for prestito in prestiti %}
+        <tr>
+          <td>{{ prestito[0] }}</td>
+          <td>{{ prestito[1] }}</td>
+          <td>{{ prestito[2] or "Non restituito" }}</td>
+          <td>{{ prestito[3] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Nessun prestito trovato per il tuo account.</p>
+  {% endif %}
+{% endblock %}

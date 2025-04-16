@@ -17,12 +17,19 @@
          <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-         <ul class="navbar-nav ms-auto">
-           <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-           <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-           <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
-           {% block logout %}{% endblock %}
-         </ul>
+        <ul class="navbar-nav ms-auto">
+          {% if current_user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('storico_prestiti') }}">Personale</a></li>
+            
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('log_in') }}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('users') }}">Catalogo</a></li>
+        </ul>
+        
       </div>
     </div>
   </nav>
