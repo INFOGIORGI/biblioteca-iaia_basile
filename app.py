@@ -125,8 +125,6 @@ def logout():
 # Pagine per Utenti
 # ---------------------
 @app.route("/user", methods=["GET", "POST"])
-@login_required
-@role_required('user')
 def users():
     libri = db.getLibri(mysql)  # Supponiamo che restituisca una lista di tuple, dove l'indice 0 è l'ISBN
     # Costruisci un dizionario: chiave = ISBN, valore = lista di riassunti per quel libro
@@ -147,29 +145,48 @@ def parolaChiave():
     libri = db.ricercaParolaChiave(mysql, parola)
     autori = db.getAutori(mysql)
     generi = db.getGeneri(mysql)
-    return render_template("user.html", libri=libri, autori=autori, generi=generi)
+    riassunti_by_book = {}
+    for libro in libri:
+        isbn = libro[0]
+        riassunti_by_book[isbn] = db.get_riassunti_by_isbn(mysql, isbn)
+    return render_template("user.html", libri=libri, autori=autori, generi=generi,riassunti_by_book=riassunti_by_book)
 
 @app.route("/ordinaPerAutore")
 @login_required
 @role_required('user')
 def ordina_per_autore():
-    return render_template("user.html", libri=db.ordinamento(mysql, 1),
-                           autori=db.getAutori(mysql), generi=db.getGeneri(mysql))
+    libri=db.ordinamento(mysql, 1)
+    riassunti_by_book = {}
+    for libro in libri:
+        isbn = libro[0]
+        riassunti_by_book[isbn] = db.get_riassunti_by_isbn(mysql, isbn)
+    return render_template("user.html", libri=libri,
+                           autori=db.getAutori(mysql), generi=db.getGeneri(mysql),riassunti_by_book=riassunti_by_book)
 
 @app.route("/ordinaPerTitolo")
 @login_required
 @role_required('user')
 def ordina_per_titolo():
-    return render_template("user.html", libri=db.ordinamento(mysql, 0),
-                           autori=db.getAutori(mysql), generi=db.getGeneri(mysql))
+    libri=db.ordinamento(mysql, 0)
+    riassunti_by_book = {}
+    for libro in libri:
+        isbn = libro[0]
+        riassunti_by_book[isbn] = db.get_riassunti_by_isbn(mysql, isbn)
+    return render_template("user.html", libri=libri,
+                           autori=db.getAutori(mysql), generi=db.getGeneri(mysql),riassunti_by_book=riassunti_by_book)
 
 @app.route("/filtraGenere", methods=["POST"])
 @login_required
 @role_required('user')
 def filtra_genere():
     genere = request.form.get("genere")
-    return render_template("user.html", libri=db.filtraGenere(mysql, genere),
-                           autori=db.getAutori(mysql), generi=db.getGeneri(mysql))
+    libri=db.filtraGenere(mysql, genere)
+    riassunti_by_book = {}
+    for libro in libri:
+        isbn = libro[0]
+        riassunti_by_book[isbn] = db.get_riassunti_by_isbn(mysql, isbn)
+    return render_template("user.html", libri=libri,
+                           autori=db.getAutori(mysql), generi=db.getGeneri(mysql),riassunti_by_book=riassunti_by_book)
 
 
 

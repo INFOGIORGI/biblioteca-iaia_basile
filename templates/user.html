@@ -1,7 +1,45 @@
 {% extends "base.html" %}
 {% block title %}Area Utente - Biblioteca{% endblock %}
+{% block logout%}<li class="nav-item"><a class="nav-link" href="{{url_for('logout')}}">Log out</a></li>{%endblock%}
+
+
 {% block content %}
 <h2>Area Utente</h2>
+
+<!-- Sezione ricerca per parola chiave -->
+<div class="mb-4">
+  <h4>Cerca per Parola Chiave</h4>
+  <form method="post" action="/parolaChiave">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Inserisci parola chiave" name="keyword">
+      <button class="btn btn-primary" type="submit">Cerca</button>
+    </div>
+  </form>
+</div>
+
+<!-- Sezione ordinamento -->
+<div class="mb-4">
+  <h4>Ordinamento dei Libri</h4>
+  <div class="btn-group" role="group" aria-label="Ordinamento">
+    <a href="{{ url_for('ordina_per_autore') }}" class="btn btn-secondary">Per Autore</a>
+    <a href="{{ url_for('ordina_per_titolo') }}" class="btn btn-secondary">Per Titolo</a>
+  </div>
+</div>
+
+<!-- Sezione filtro per genere -->
+<div class="mb-4">
+  <h4>Filtra Libri per Genere</h4>
+  <form method="post" action="/filtraGenere">
+    <select class="form-select" name="genere" aria-label="Filtra per genere" onchange="this.form.submit()">
+      <option selected>Seleziona genere</option>
+      {% for genere in generi %}
+        <option value="{{ genere[0] }}">{{ genere[0] }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<!-- Lista libri con riassunto --><h2>Area Utente</h2>
 <div class="mb-4">
   <h4>Lista Libri</h4>
   {% for libro in libri %}
@@ -79,3 +117,6 @@
   {% endfor %}
 </div>
 {% endblock %}
+
+
+

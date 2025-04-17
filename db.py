@@ -1,9 +1,9 @@
-# database.py
+from werkzeug.security import generate_password_hash, check_password_hash# database.py
 from flask_mysqldb import MySQL
-from werkzeug.security import generate_password_hash, check_password_hash
+
 import re
 
-def insertLibro_Catalogo(mysql, titolo, isbn, genere, piano, scaffale, posizione, autori, riassunto):
+def insertLibro_Catalogo(mysql, titolo, isbn, genere, piano, scaffale, posizione, autori):
     cursor = mysql.connection.cursor()
 
     # Verifica se l'ISBN esiste già
@@ -12,8 +12,8 @@ def insertLibro_Catalogo(mysql, titolo, isbn, genere, piano, scaffale, posizione
         return "Errore: Il libro con ISBN esiste già."
 
     # Inserisci il libro nella tabella Libro
-    cursor.execute("INSERT INTO Libro (isbn, titolo, genere, riassunto) VALUES (%s, %s, %s, %s)",
-                   (isbn, titolo, genere, riassunto))
+    cursor.execute("INSERT INTO Libro (isbn, titolo, genere) VALUES (%s, %s, %s, %s)",
+                   (isbn, titolo, genere))
     
     # Recupera l'id della locazione o creala se non esiste
     cursor.execute("SELECT id FROM Locazione WHERE piano = %s AND scaffale = %s AND posizione = %s",
@@ -52,7 +52,7 @@ def ricercaParolaChiave(mysql, parola):
     cursor = mysql.connection.cursor()
     pattern = f"%{parola}%"
     query = """
-    SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato,
+    SELECT l.isbn, l.titolo, c.isPrestato,
            loc.piano, loc.scaffale, loc.posizione, l.genere,
            a.nome, a.cognome
     FROM Libro l
@@ -69,7 +69,7 @@ def ordinamento(mysql, dato):
     cursor = mysql.connection.cursor()
     if dato == 0:
         query = """
-        SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato,
+        SELECT l.isbn, l.titolo, c.isPrestato,
                loc.piano, loc.scaffale, loc.posizione, l.genere
         FROM Libro l
         JOIN Catalogo c ON l.isbn = c.isbn
@@ -78,7 +78,7 @@ def ordinamento(mysql, dato):
         """
     else:
         query = """
-        SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato,
+        SELECT l.isbn, l.titolo, c.isPrestato,
                loc.piano, loc.scaffale, loc.posizione, l.genere,
                GROUP_CONCAT(DISTINCT a.nome, ' ', a.cognome
                    ORDER BY a.cognome, a.nome SEPARATOR ', ') AS autori
@@ -87,7 +87,7 @@ def ordinamento(mysql, dato):
         JOIN Locazione loc ON c.id_locazione = loc.id
         JOIN Libro_Autore la ON l.isbn = la.id_libro
         JOIN Autore a ON la.id_autore = a.id
-        GROUP BY l.isbn, l.titolo, l.riassunto, c.isPrestato,
+        GROUP BY l.isbn, l.titolo, c.isPrestato,
                  loc.piano, loc.scaffale, loc.posizione, l.genere
         ORDER BY MIN(a.cognome), MIN(a.nome);
         """
@@ -97,7 +97,7 @@ def ordinamento(mysql, dato):
 def filtraGenere(mysql, genere):
     cursor = mysql.connection.cursor()
     query = """
-    SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato,
+    SELECT l.isbn, l.titolo, c.isPrestato,
            loc.piano, loc.scaffale, loc.posizione, l.genere
     FROM Libro l
     JOIN Catalogo c ON l.isbn = c.isbn
@@ -140,11 +140,6 @@ def logIn(mysql, email, password):
         return {'tesseraCliente': dati[0], 'email': dati[4], 'is_admin': 'user'}
     return False
 
-def mostraRiassunto(mysql, isbn):
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT riassunto FROM Libro WHERE isbn = %s", (isbn,))
-    return cursor.fetchone()
-
 def getAutori(mysql):
     cursor = mysql.connection.cursor()
     query = """
@@ -186,7 +181,7 @@ def getGeneri(mysql):
 def getLibri(mysql):
     cursor = mysql.connection.cursor()
     query = """
-    SELECT l.isbn, l.titolo, l.riassunto, c.isPrestato,
+    SELECT l.isbn, l.titolo, c.isPrestato,
            loc.piano, loc.scaffale, loc.posizione, l.genere
     FROM Libro l
     JOIN Catalogo c ON l.isbn = c.isbn
