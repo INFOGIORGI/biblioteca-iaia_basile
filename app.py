@@ -179,7 +179,7 @@ def ordina_per_titolo():
 @login_required
 @role_required('user')
 def filtra_genere():
-    genere = request.form.get("genere")
+    genere = request.form.get("genere") 
     libri=db.filtraGenere(mysql, genere)
     riassunti_by_book = {}
     for libro in libri:
